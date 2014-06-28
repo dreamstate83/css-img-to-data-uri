@@ -15,6 +15,7 @@ module.exports = function (grunt) {
         path = require('path'),
         mime = require('mime'),
         urlRegex = /url\(['"]?([0-9a-zA-Z.\/\-\_]+)['"]?\)/,
+        protoRegex = /url\(['"]?(\/\/)/, //detects if using relative protocol path
         desc;
 
     /**
@@ -26,8 +27,9 @@ module.exports = function (grunt) {
     */
     function getImagePath(line, filePath) {
         var match = line.match(urlRegex);
+        var protomatch = line.match(protoRegex);
 
-        if (match) {
+        if (match & !protomatch) {
             return path.dirname(filePath) + '/' + match[1];
         }
         return null;
